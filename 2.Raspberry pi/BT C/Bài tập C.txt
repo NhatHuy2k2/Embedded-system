@@ -1,0 +1,13 @@
+/*
+BT1: Viết code in ra số từ 1 đến 10
+
+BT2: Viết code yêu cầu user nhập 2 số nguyên, sau đó tính trung bình và in kết quả ra màn hình
+
+BT3: Viết code để mỗi 1s chương trình tạo 10 số ngẫu nhiên trong khoảng [0,100], sau đó tính trung bình và in ra màn hình.
+
+BT4: Viết code yêu cầu user nhập tọa độ 3 đỉnh của 1 tam giác, sau đó tính diện tích tam giác đó và xuất ra màn hình.
+
+BT5: Viết code để đọc giá trị nhiệt độ của CPU, sau đó xuất ra màn hình theo format:
+dd/mm/yyy hh:mm:ss temp
+vd: 14/02/2023 15:23:12 36.7
+*/

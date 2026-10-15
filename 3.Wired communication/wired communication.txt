@@ -1,0 +1,21 @@
+Link bài giảng online phần wired communication 
+11. Review về các chuẩn giao tiếp cơ bản
+https://drive.google.com/file/d/1YG7DOsLc-r5I7sHPNmJPamk7rGciNHGW/view?usp=sharing
+
+12. Giao tiếp SPI trên Raspberry
+https://drive.google.com/file/d/1i_WpzqQ5jTX6uR6Gacw758MiXyMQUotJ/view?usp=sharing
+
+13. Ví dụ về giao tiếp SPI
+https://drive.google.com/file/d/1M3IrX8ITdqg2Fp17h4uJmZgbJoEqr9Cn/view?usp=sharing
+
+14. Giao tiếp I2C
+https://drive.google.com/file/d/1R8iQVnjK9h1w9u5xyS2nLGw1INipOOO3/view?usp=sharing
+
+15. Ví dụ I2C
+https://drive.google.com/file/d/1iH81YwydUuP2AjSrnJAibYcjFymB4yVc/view?usp=sharing
+
+16. Ví dụ I2C - MPU6050
+https://drive.google.com/file/d/1L4eTCZ-iKwUD2h-Rk6EX0yafAoP_JnlX/view?usp=sharing
+
+17. Giao tiếp Uart trên Raspberry
+https://drive.google.com/file/d/1AxqPhx2ubMpxoy6cva0f6UfIyqIVgiPe/view?usp=sharing

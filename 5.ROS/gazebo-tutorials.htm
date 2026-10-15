@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html ng-app="gazebo">
+<head>
+  <base href="/">
+  <title>Gazebo  : Tutorial : ROS control</title>
+  <meta name="description" content="The Gazebo robot simulation"/>
+  <meta name="author" content="OSRF"/>
+
+   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+   <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/themes/smoothness/jquery-ui.css" />
+   <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>
+  <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/gazebo-0b2620068a8c04a28f40aa610daa1ce7d82cfb61be5d89eedf68fce9d11462dd.ico" />
+  <link rel="stylesheet" media="all" href="/assets/application-fdddd765ece1e979c763c88c1c0b9626d47f18f141cd9c002a3d97a65a05a519.css" data-turbolinks-track="true" />
+  <script src="/assets/application-a46779491b619d85fbc4185215226f88d07ee635c581bdf3caab60b3d45341be.js" data-turbolinks-track="true"></script>
+ <script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="/assets/chartkick-df940af86f1f259336566e00b30fe461893f2d2d302d9c230268ca0ac820a114.js"></script>
+
+  <meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="xLVmeTtnlAHgOKwLglJ4I9z7ZMdOCmnP8ieyyT0csBzyXcTbO8Cr2HhSrm0iBMX9J5FMHvKXGKRLN1iJyxVBUA==" />
+</head>
+<body>
+
+<a id="top"></a>
+
+<div class="wrap">
+
+<div id="nav" class="navbar navbar-default navbar-static-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle"
+              data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/"><img
+        src="/assets/masthead-0bd44817978df8069f427d8ca1657998789065a2b242edfd1a3d8ab4a329dd4c.png" alt="gazebo" height='20'/></a>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class='active'><a href="/tutorials">Tutorials</a></li>
+        <li class=''><a href='/download'>Download</a></li>
+        <li class=''><a href="/blog.html">Blog</a></li>
+        <li class=''><a href="/media">Media</a></li>
+        <li class=''><a href="/projects">Projects</a></li>
+      </ul>
+
+      <!--
+      < if user_signed_in? %>
+      <ul class="nav navbar-nav navbar-right pull-right text-right">
+        <li class='dropdown'>
+        <a href='#' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-expanded='false'><= current_user.email[/[^@]+/] %><span class='caret'></span>
+          <ul class='dropdown-menu' role='menu'>
+            <li><a href='/users/edit'>Settings</a></li>
+            < if current_user.admin %>
+              <li><a href='/users/sign_up'>New user</a></li>
+            <end%>
+            <li><a href='/logout'>Logout</a></li>
+          </ul>
+          </li>
+      </ul>
+      <end%>
+      -->
+
+      <!-- Search box form -->
+      <div class="col-sm-3 col-md-3 pull-right">
+        <form class="navbar-form" role="search" action="search"
+              id="cse-search-box-form-id">
+          <div class="input-group">
+            <input type="text" class="form-control" placeHolder="Search"
+                   name="Q" id="cse-search-input-box-id" autocomplete="off">
+            <div class="input-group-btn">
+              <button class="btn btn-default" type="submit">
+                <i class="glyphicon glyphicon-search"></i>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div><!--/.nav-collapse -->
+  </div>
+</div>
+
+<div class='flashes'>
+</div>
+
+<div class="container-fluid">
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/lang-matlab.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/lang-proto.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/lang-tex.js"></script>
+
+  <div class='row'>
+  <div class='col-xs-12'>
+    <div class="alert alert-warning" role="alert">
+      <strong><span class="glyphicon glyphicon-warning-sign"></span> WARNING</strong>: This documentation is for Gazebo-classic, which has been superseded by Gazebo. <a href="https://gazebosim.org/docs">Click here to see the documentation for the latest Gazebo release</a>
+    </div>
+  </div>
+</div>
+
+
+  <div class="row">
+    <div class="col-xs-4 text-left">
+      <a href='/tutorials?cat=install'><span class="glyphicon glyphicon-arrow-left"></span> Back</a>
+    </div>
+  </div>
+
+  <div class="row">
+
+    <div class="col-md-8 col-sm-7">
+      <h1 id="tutorial_title" style="margin-bottom:0px">ROS control</h1>
+    </div>
+
+    <!-- Only display version numbers and edit button for non-guided tutorials -->
+    <div class="col-md-4 col-sm-5 hidden-xs" style="margin-top: 30px">
+      <form class="form-inline" role="form">
+        <div class="form-group col-xs-12">
+          <a href=https://github.com/osrf/gazebo_tutorials/blob/master/ros_control/tutorial.md role="button"
+            class="form-control btn btn-primary pull-right"
+            style="width: 60px; margin-left: 10px">Edit</a>
+          <select class="form-control pull-right"
+            style="width: 140px" id="ver"
+            onchange='if (this.value) window.location.href="/tutorials?cat=install&tut=ros_control&ver=" + this.value'>
+                <option selected value='1.9%2B'>Version: 1.9+</option>
+          </select>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <hr style="margin-top: 8px"/>
+  <div class="row">
+
+    <div class="col-md-3 max-width-400 hidden-sm hidden-xs" style="width: 300px">
+      <div class="toc" data-spy="affix" data-offset-top="200">
+        <div class="panel-group" id="accordion">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">Table of Contents</a></h4>
+            </div>
+            <div id="collapseOne" class="panel-collapse collapse in">
+              <div class="panel-body">
+                <div id="toc" class=""></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-md-8">
+      <h1>Tutorial: ROS Control</h1>
+
+<p>In this tutorial we will setup simulated controllers to actuate the joints of your robot.
+This will allow us to provide the correct ROS interfaces for planners like <a href="http://moveit.ros.org">MoveIt!</a>.
+We will be using the <a href="http://ros.org/wiki/ros_control">ros_control</a> packages, a new standard in ROS for controller interfaces.</p>
+
+<h2>About ros_control</h2>
+
+<p>We encourage you to read an overview of the documentation on <a href="http://ros.org/wiki/ros_control">ros_control</a> before proceeding.</p>
+
+<h2>Data flow of ros_control and Gazebo</h2>
+
+<p>Simulating a robot&#39;s controllers in Gazebo can be accomplished using ros_control and a simple Gazebo plugin adapter.
+An overview of the relationship between simulation, hardware, controllers and transmissions is shown below:</p>
+
+<p><img src='https://github.com/osrf/gazebo_tutorials/raw/master/ros_control/Gazebo_ros_transmission.png' width='800px'/></p>
+
+<h1>Prerequisites</h1>
+
+<p>This tutorial builds off of many of the concepts in the previous tutorials.
+We will again be using the RRBot that was setup in the
+<a href="http://gazebosim.org/tutorials/?tut=ros_urdf">Using URDF in Gazebo</a> tutorial, as an example for the plugins covered here.</p>
+
+<p>Make sure you have already installed ros_control, ros_controllers, and their dependencies as described in the
+<a href="http://gazebosim.org/tutorials?tut=ros_installing&cat=connect_ros">installation instructions</a>.</p>
+
+<h1>Usage</h1>
+
+<h2>Add transmission elements to a URDF</h2>
+
+<p>To use ros_control with your robot, you need to add some additional elements to your URDF.
+The <code class="prettyprint">&lt;transmission&gt;</code> element is used to link actuators to joints, see the
+<a href="http://ros.org/wiki/urdf/XML/Transmission"><code class="prettyprint">&lt;transmission&gt;</code> spec</a> for exact XML format.</p>
+
+<p>For the purposes of gazebo_ros_control in its current implementation, the only important information in these transmission tags are:</p>
+
+<ul>
+<li><code class="prettyprint">&lt;joint name=&quot;&quot;&gt;</code> - the name must correspond to a joint else where in your URDF</li>
+<li><code class="prettyprint">&lt;type&gt;</code> - the type of transmission. Currently only &quot;transmission_interface/SimpleTransmission&quot; is implemented. (feel free to add more)</li>
+<li><code class="prettyprint">&lt;hardwareInterface&gt;</code> - within the <code class="prettyprint">&lt;actuator&gt;</code> and <code class="prettyprint">&lt;joint&gt;</code> tags,
+this tells the gazebo_ros_control plugin what hardware interface to load
+(position, velocity or effort interfaces).
+Currently only effort interfaces are implemented. (feel free to add more)</li>
+</ul>
+
+<p>The rest of the names and elements are currently ignored.</p>
+
+<h2>Add the gazebo_ros_control plugin</h2>
+
+<p>In addition to the transmission tags, a Gazebo plugin needs to be added to your URDF that actually parses the transmission tags and loads the appropriate hardware interfaces and controller manager.
+By default the gazebo_ros_control plugin is very simple, though it is also extensible via an additional plugin architecture to allow power users to create their own custom robot hardware interfaces between ros_control and Gazebo.</p>
+
+<p>The default plugin XML should be added to your URDF:</p>
+
+<pre><code class="prettyprint">&lt;gazebo&gt;
+  &lt;plugin name=&quot;gazebo_ros_control&quot; filename=&quot;libgazebo_ros_control.so&quot;&gt;
+    &lt;robotNamespace&gt;/MYROBOT&lt;/robotNamespace&gt;
+  &lt;/plugin&gt;
+&lt;/gazebo&gt;
+</code></pre>
+
+<p>The gazebo_ros_control <code class="prettyprint">&lt;plugin&gt;</code> tag also has the following optional child elements:</p>
+
+<ul>
+<li><code class="prettyprint">&lt;robotNamespace&gt;</code>: The ROS namespace to be used for this instance of the plugin, defaults to robot name in URDF/SDF</li>
+<li><code class="prettyprint">&lt;controlPeriod&gt;</code>: The period of the controller update (in seconds), defaults to Gazebo&#39;s period</li>
+<li><code class="prettyprint">&lt;robotParam&gt;</code>: The location of the robot_description (URDF) on the parameter server, defaults to &#39;/robot_description&#39;</li>
+<li><code class="prettyprint">&lt;robotSimType&gt;</code>: The pluginlib name of a custom robot sim interface to be used (see below for more details), defaults to &#39;DefaultRobotHWSim&#39;</li>
+</ul>
+
+<h3>Default gazebo_ros_control Behavior</h3>
+
+<p>By default, without a <code class="prettyprint">&lt;robotSimType&gt;</code> tag, gazebo_ros_control will attempt to get all of the information it needs to interface with a ros_control-based controller out of the URDF.
+This is sufficient for most cases, and good for at least getting started.</p>
+
+<p>The default behavior provides the following ros_control interfaces:</p>
+
+<ul>
+<li>hardware_interface::JointStateInterface</li>
+<li>hardware_interface::EffortJointInterface</li>
+<li>hardware_interface::VelocityJointInterface - <em>not fully implemented</em></li>
+</ul>
+
+<h3>Advanced: custom gazebo_ros_control Simulation Plugins</h3>
+
+<p>The gazebo_ros_control Gazebo plugin also provides a pluginlib-based interface to implement custom interfaces between Gazebo and ros_control for simulating more complex mechanisms (nonlinear springs, linkages, etc).</p>
+
+<p>These plugins must inherit gazebo_ros_control::RobotHWSim which implements a simulated ros_control hardware_interface::RobotHW.
+RobotHWSim provides API-level access to read and command joint properties in the Gazebo simulator.</p>
+
+<p>The respective RobotHWSim sub-class is specified in a URDF model and is loaded when the robot model is loaded.
+For example, the following XML will load the default plugin (same behavior as when using no <code class="prettyprint">&lt;robotSimType&gt;</code> tag):</p>
+
+<pre><code class="prettyprint">&lt;gazebo&gt;
+  &lt;plugin name=&quot;gazebo_ros_control&quot; filename=&quot;libgazebo_ros_control.so&quot;&gt;
+    &lt;robotNamespace&gt;/MYROBOT&lt;/robotNamespace&gt;
+    &lt;robotSimType&gt;gazebo_ros_control/DefaultRobotHWSim&lt;/robotSimType&gt;
+  &lt;/plugin&gt;
+&lt;/gazebo&gt;
+</code></pre>
+
+<h2>RRBot Example</h2>
+
+<p>We add a <code class="prettyprint">&lt;transmission&gt;</code> block similar to the following for every joint that we wish to have Gazebo actuate.
+Note that the <code class="prettyprint">&lt;hardwareInterface&gt;</code> must be included in both the <code class="prettyprint">&lt;joint&gt;</code>
+and <code class="prettyprint">&lt;actuator&gt;</code> tags
+(see <a href="https://github.com/ros-controls/ros_control/issues/177">ros_control issue here</a>).
+Open your <code class="prettyprint">rrbot.xacro</code> file and at the bottom of the file you should see:</p>
+
+<pre><code class="prettyprint">  &lt;transmission name=&quot;tran1&quot;&gt;
+    &lt;type&gt;transmission_interface/SimpleTransmission&lt;/type&gt;
+    &lt;joint name=&quot;joint1&quot;&gt;
+      &lt;hardwareInterface&gt;EffortJointInterface&lt;/hardwareInterface&gt;
+    &lt;/joint&gt;
+    &lt;actuator name=&quot;motor1&quot;&gt;
+      &lt;hardwareInterface&gt;EffortJointInterface&lt;/hardwareInterface&gt;
+      &lt;mechanicalReduction&gt;1&lt;/mechanicalReduction&gt;
+    &lt;/actuator&gt;
+  &lt;/transmission&gt;
+
+  &lt;transmission name=&quot;tran2&quot;&gt;
+    &lt;type&gt;transmission_interface/SimpleTransmission&lt;/type&gt;
+    &lt;joint name=&quot;joint2&quot;&gt;
+      &lt;hardwareInterface&gt;EffortJointInterface&lt;/hardwareInterface&gt;
+    &lt;/joint&gt;
+    &lt;actuator name=&quot;motor2&quot;&gt;
+      &lt;hardwareInterface&gt;EffortJointInterface&lt;/hardwareInterface&gt;
+      &lt;mechanicalReduction&gt;1&lt;/mechanicalReduction&gt;
+    &lt;/actuator&gt;
+  &lt;/transmission&gt;
+</code></pre>
+
+<p>You&#39;ll also see the gazebo_ros_control plugin in <code class="prettyprint">rrbot.gazebo</code> that reads in all the <code class="prettyprint">&lt;transmission&gt;</code> tags:</p>
+
+<pre><code class="prettyprint">&lt;gazebo&gt;
+  &lt;plugin name=&quot;gazebo_ros_control&quot; filename=&quot;libgazebo_ros_control.so&quot;&gt;
+    &lt;robotNamespace&gt;/rrbot&lt;/robotNamespace&gt;
+  &lt;/plugin&gt;
+&lt;/gazebo&gt;
+</code></pre>
+
+<h2>Create a ros_controls package</h2>
+
+<p>We&#39;ll next need to create a configuration file and launch file for our ros_control controllers that interface with Gazebo.</p>
+
+<h3>Create new package</h3>
+
+<pre><code class="prettyprint">mkdir ~/catkin_ws
+cd ~/catkin_ws
+catkin_create_pkg MYROBOT_control controller_manager joint_state_controller robot_state_publisher
+cd MYROBOT_control
+mkdir config
+mkdir launch
+</code></pre>
+
+<p><a href="https://github.com/ros-simulation/gazebo_ros_demos/tree/kinetic-devel/rrbot_control">The complete working example of the package we&#39;re talking about in this section can be found as <code class="prettyprint">rrbot_control</code></a>).</p>
+
+<h3>Create a .yaml config file</h3>
+
+<p>The PID gains and controller settings must be saved in a yaml file that gets loaded to the param server via the roslaunch file.
+In the config folder of your <code class="prettyprint">MYROBOT\_control</code> package, adapt the following RRBot example to your robot as
+<code class="prettyprint">MYROBOT_control/config/rrbot_control.yaml</code>:</p>
+
+<pre><code class="prettyprint">rrbot:
+  # Publish all joint states -----------------------------------
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 50  
+
+  # Position Controllers ---------------------------------------
+  joint1_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: joint1
+    pid: {p: 100.0, i: 0.01, d: 10.0}
+  joint2_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: joint2
+    pid: {p: 100.0, i: 0.01, d: 10.0}
+</code></pre>
+
+<p>See the next section for more details about these controllers.</p>
+
+<h3>Create a roslaunch file</h3>
+
+<p>Create a roslaunch file for starting the ros_control controllers.
+Within the launch folder create a <code class="prettyprint">MYROBOT_control/launch/MYROBOT_control.launch</code> file and adapt the following RRBot example to your robot:</p>
+
+<pre><code class="prettyprint">&lt;launch&gt;
+
+  &lt;!-- Load joint controller configurations from YAML file to parameter server --&gt;
+  &lt;rosparam file=&quot;$(find rrbot_control)/config/rrbot_control.yaml&quot; command=&quot;load&quot;/&gt;
+
+  &lt;!-- load the controllers --&gt;
+  &lt;node name=&quot;controller_spawner&quot; pkg=&quot;controller_manager&quot; type=&quot;spawner&quot; respawn=&quot;false&quot;
+    output=&quot;screen&quot; ns=&quot;/rrbot&quot; args=&quot;joint1_position_controller joint2_position_controller joint_state_controller&quot;/&gt;
+
+  &lt;!-- convert joint states to TF transforms for rviz, etc --&gt;
+  &lt;node name=&quot;robot_state_publisher&quot; pkg=&quot;robot_state_publisher&quot; type=&quot;robot_state_publisher&quot;
+    respawn=&quot;false&quot; output=&quot;screen&quot;&gt;
+    &lt;remap from=&quot;/joint_states&quot; to=&quot;/rrbot/joint_states&quot; /&gt;
+  &lt;/node&gt;
+
+&lt;/launch&gt;
+</code></pre>
+
+<h4>Explanation</h4>
+
+<p>The first line, &quot;rosparam&quot;, loads the controller settings to the parameter server by loading a yaml configuration file (discussed in the next section).</p>
+
+<p>The controller_spawner node starts the two joint position controllers for the RRBot by running a python script that makes a service call to the ros_control controller manager.
+The service calls tell the controller manager which controllers you want.
+It also loads a third controller that publishes the joint states of all the joints with hardware_interfaces and advertises the topic on /joint_states.
+The spawner is just a helper script for use with roslaunch.</p>
+
+<p>The final line starts a robot_state_publisher node that simply listens to /joint_states messages from the joint_state_controller then publishes the transforms to /tf.
+This allows you to see your simulated robot in Rviz as well as do other tasks.</p>
+
+<h2>Start the controllers using roslaunch</h2>
+
+<p>Test the RRBot controlled by ros_control by running the following:</p>
+
+<p>Start the RRBot simulation:</p>
+
+<pre><code class="prettyprint">roslaunch rrbot_gazebo rrbot_world.launch
+</code></pre>
+
+<p>Load the controllers for the two joints by running the second launch file:</p>
+
+<pre><code class="prettyprint">roslaunch rrbot_control rrbot_control.launch
+</code></pre>
+
+<h3>Using service calls manually</h3>
+
+<p>If you first load the rrbot_control.yaml files to the parameter server, you could load the controllers manually through service requests.
+We&#39;ll include them here for reference though we usually prefer roslaunch:</p>
+
+<p>Load the controllers:</p>
+
+<pre><code class="prettyprint">rosservice call /rrbot/controller_manager/load_controller &quot;name: &#39;joint1_position_controller&#39;&quot;
+rosservice call /rrbot/controller_manager/load_controller &quot;name: &#39;joint2_position_controller&#39;&quot;
+</code></pre>
+
+<p>Start the controllers:</p>
+
+<pre><code class="prettyprint">rosservice call /rrbot/controller_manager/switch_controller &quot;{start_controllers: [&#39;joint1_position_controller&#39;,&#39;joint2_position_controller&#39;], stop_controllers: [], strictness: 2}&quot;
+</code></pre>
+
+<p>Stop the controllers:</p>
+
+<pre><code class="prettyprint">rosservice call /rrbot/controller_manager/switch_controller &quot;{start_controllers: [], stop_controllers: [&#39;joint1_position_controller&#39;,&#39;joint2_position_controller&#39;], strictness: 2}&quot;
+</code></pre>
+
+<h2>Manually send example commands</h2>
+
+<p>Send example joint commands to them for testing:</p>
+
+<pre><code class="prettyprint">rostopic pub -1 /rrbot/joint1_position_controller/command std_msgs/Float64 &quot;data: 1.5&quot;
+rostopic pub -1 /rrbot/joint2_position_controller/command std_msgs/Float64 &quot;data: 1.0&quot;
+</code></pre>
+
+<h2>Use RQT To Send Commands</h2>
+
+<p>In this section we&#39;ll go over tools to help you visualize the performance of your controller and tune any gains/parameters the controller might have, particularly PID gains.
+We&#39;ll be using <a href="http://www.ros.org/wiki/rqt">RQT</a>, ROS&#39;s plugin-based user interface, so be sure you first have that installed.</p>
+
+<p>Start RQT:</p>
+
+<pre><code class="prettyprint">rosrun rqt_gui rqt_gui
+</code></pre>
+
+<h3>Add a Command Publisher</h3>
+
+<p>On the &#39;Plugins&#39; menu of RQT add the &#39;Topics-&gt;Message Publisher&#39; plugin then choose the topic from the drop down box that commands any particular controller that you want to publish to.
+For the RRBot, add the controller:</p>
+
+<pre><code class="prettyprint">/rrbot/joint1_position_controller/command
+</code></pre>
+
+<p>Then press the green plus sign button at the top right.</p>
+
+<p>Enable the topic publisher by checking the check box on the left of the topic name.
+Set the rate column to 100 (the frequency we send it commands - 100hz in this case).</p>
+
+<p>Next, expand the topic so that you see the &quot;data&quot; row.
+In the expression column, on the data row, try different radian values between joint1&#39;s joint limits - in RRBot&#39;s case there are no limits because the joints are continuous, so any value works.
+You should be able to get the RRBot to swing around if you are doing this tutorial with that robot.</p>
+
+<p>Next, in that same expression box we&#39;ll have it automatically change values using a sine wave.
+Add the following:</p>
+
+<pre><code class="prettyprint">sin(i/100)
+</code></pre>
+
+<p>For more advanced control, you can configure it to publish a sine wave to your robot&#39;s exact joint limits:</p>
+
+<pre><code class="prettyprint">sin(i/rate*speed)*diff + offset
+</code></pre>
+
+<p>An explanation of variables:</p>
+
+<ul>
+<li>i - the RQT variable for time</li>
+<li>rate - the frequency that this expression is evaluated. This should be the same number as in the rate column of the topic publisher. Recommended value is 100.</li>
+<li>speed - how quick you want the join to actuate. Start off with just 1 for a slow speed</li>
+<li>upper_limit and lower_limits - the joint limits of the hardware being controlled by this controller</li>
+<li>diff = (upper_limit - lower_limit)/2</li>
+<li>offset = upper_limit-diff</li>
+</ul>
+
+<h3>Visualize the controller&#39;s performance</h3>
+
+<p>Add a Plot plugin to RQT and add the same topic as the one you chose above for the topic publisher:</p>
+
+<pre><code class="prettyprint">/rrbot/joint1_position_controller/command/data
+</code></pre>
+
+<p>Click the green add button.
+You should now see a sine wave being plotted on the screen.</p>
+
+<p>Add another topic to the Plot plugin that tracks the actual position of the actuator being controlled.  You will want to the reduce the error between these two values by tuning the PID gains, as shown in the next step.
+For the RRBot:</p>
+
+<pre><code class="prettyprint">/rrbot/joint1_position_controller/state/process_value
+</code></pre>
+
+<p>Your screen should look something like this:</p>
+
+<p><img src='https://github.com/osrf/gazebo_tutorials/raw/master/ros_control/rqt_controller_tuning.png' width='800px'/></p>
+
+<p>Note: the RQT plot plugin is known to have bugs after running for a while (&gt;1min).
+The drawings start acting strangely.
+The current solution is to press the blue refresh button at the top right of the plugin.</p>
+
+<h3>Tune the PID gains</h3>
+
+<p>Finally, we&#39;ll use <a href="http://ros.org/wiki/dynamic_reconfigure">dynamic reconfigure</a> to tune the proportional, derivative, and integral gains of the PID controller, assuming this is applicable to your robot.</p>
+
+<p>Add the &#39;Dynamic Reconfigure&#39; plugin to RQT and click &#39;Expand All&#39; to see the sub-options.
+Assuming your controller uses PID, you should use a &quot;pid&quot; option.
+Clicking on it should reveal 5 sliders that let you tune the controller, as pictured in the following screenshot.
+Adjust these values until you get the desired performance of your controller.</p>
+
+<p><img src='https://github.com/osrf/gazebo_tutorials/raw/master/ros_control/rqt_dynamnic_reconfigure_pid.png' width='600px'/></p>
+
+<h3>Use roslaunch to save your RQT perspective</h3>
+
+<p>A pre-configured RQT perspective for the rrbot can be easily launched with the following command:</p>
+
+<pre><code class="prettyprint">roslaunch rrbot_control rrbot_rqt.launch
+</code></pre>
+
+<p>You can use that as a template for doing this with your own robot.</p>
+
+<h2>Connect Rviz to Gazebo Simulation</h2>
+
+<p>Now that you are using ros_control to send commands to your robot in simulation, you can also use the ros_control joint<em>state</em>controller to read the state of the robot from Gazebo.
+The idea behind a good simulator is that you should be able to use the same software on your real hardware as you do in simulation.
+A good starting point for that is visualizing your simulated robot in Rviz, similar to how it is done with real hardware.</p>
+
+<p>Assuming you are already starting a joint_state_controller as documented above in your rosparam and roslaunch files, your next step is to start Rviz:</p>
+
+<pre><code class="prettyprint">rosrun rviz rviz
+</code></pre>
+
+<p>Under &quot;Global Options&quot; change your &quot;Fixed Frame&quot; to &quot;world&quot; to resolve any errors it might be giving you.</p>
+
+<p>Next, add a &quot;RobotModel&quot; display type to Rviz and you should then see your simulated robot in Gazebo being visualized in Rviz!</p>
+
+<h1>Demo Code</h1>
+
+<p>The example code used for the RRBot in this tutorial is available in the repository
+<a href="https://github.com/ros-simulation/gazebo_ros_demos">gazebo_ros_demos</a>.</p>
+
+<h1>Next Steps</h1>
+
+<p>Learn about ROS message and service calls that are available for use with Gazebo in the tutorial <a href="http://gazebosim.org/tutorials/?tut=ros_comm">ROS Communication with Gazebo</a>.</p>
+
+    </div>
+
+  </div> 
+
+</div>
+
+
+<script type="text/javascript">
+  $(function() {
+    var toc = $("#toc").tocify({
+
+      showAndHide: true, showAndHideOnScroll: false, highlightOnScroll: false, selectors: "h1, h2, h3, h4", extendPage: false, ignoreSelector: $("#tutorial_title") }).data("toc-tocify");
+    $(".optionName").popover({ trigger: "hover" });
+  });
+</script>
+
+</div>
+
+<div id="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 col-xs-4 text-left">
+        <p class="">&copy;2014 Open Source Robotics Foundation</p>
+      </div>
+
+      <div class="col-md-4 col-xs-4 text-center">
+        <p class="">Gazebo is open-source licensed under <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache 2.0</a></p>
+      </div>
+
+      <div class="col-md-4 col-xs-4 text-right">
+        <a href="//plus.google.com/u/0/115981436296571800301?prsrc=3" rel="publisher" target="_top" class="footer-social-link"><img src="/assets/google_gray-cc34826f560f99c7a9b7db88cd5f2db4d28fd4b3afcfa4b897435c51e3b25518.png" alt="Google+" class="footer-social"/></a>
+        <a href="https://www.youtube.com/channel/UCJyqf9XJpDoM9XnpAwW6WxA" rel="publisher" target="_top" class="footer-social-link"><img src="/assets/youtube_gray-978838444154eb6aa5e4aa38489f66d10e40361dd06a3814411c211cba013752.png" alt="YouTube" class="footer-social"/></a>
+        <a href="https://twitter.com/GazeboSim" rel="publisher" target="_top" class="footer-social-link"><img src="/assets/twitter_gray-8e9dfe74c6cab12171992a40add9a65e5bba92ac93063a4ac0eeba58c77e774a.png" alt="YouTube" class="footer-social"/></a>
+      </div>
+    </div> <!-- row -->
+  </div> <!-- container -->
+</div> <!-- footer -->
+
+</body>
+</html>

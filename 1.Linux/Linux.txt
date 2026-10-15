@@ -1,0 +1,10 @@
+Link bài giảng online:
+
+3. Hệ điều hành Linux
+https://drive.google.com/file/d/1_JEGEmsxZ_aEBxNzbCxc9v3gj-91FGP0/view?usp=sharing
+4. Hệ điều hành Linux (tiếp)
+https://drive.google.com/file/d/1lgWLMjOb-c5rMt4RnfQV_nXrx8so4inx/view?usp=sharing
+5. Quản lý source code với Git
+https://drive.google.com/file/d/1t6GJxt0_W4EyFmYM778C2Dd3iYBGjzEU/view?usp=sharing
+6. Các phương pháp biên soạn, chỉnh sửa code cho raspberry
+https://drive.google.com/file/d/1iyTXQVX69GLMAj8Ko3UajfsHLmFSNtIl/view?usp=sharing

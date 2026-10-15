@@ -1,0 +1,12 @@
+Bản đồ chạy thử (theo mô hình autorace 2020)
+Cách sử dụng:
+ - Copy file "autorace_2020.world" vào thư mục worlds của package mô phỏng (vd myrobot_gazebo)
+ - copy thư mục "turtlebot3_autorace_2020" vào thư mục models của package mô phỏng, đây là folder chứa các mô hình của đường đua.
+ - mở file "package.xml" trong package mô phỏng của các em, sửa nội dung chỗ tag <export>  ...   </export> thành
+          <export>
+                  <!-- Other tools can request additional information be placed here -->
+                  <gazebo_ros gazebo_model_path="${prefix}/models"/>
+          </export>
+để khai báo đường dẫn đến thư mục models. Sau đó compile lại package với catkin_make.
+- chỉnh sửa lại kích thước robot sao cho khoảng cách 2 bánh xe trong khoảng 160-180 mm để vừa đường chạy, chiều còn lại tối thiểu 140mm.
+- Sửa file launch để đưa robot vào bản đồ tại vạch xuất phát như hướng dẫn trong các clip.

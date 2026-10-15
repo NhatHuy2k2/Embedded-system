@@ -1,0 +1,13 @@
+Bài tập SPI
+
+1. Hiển thị mssv trên module max7219
+
+2. Hiển thị số chạy từ 0 đến 9999. Yêu cầu xóa số 0 vô nghĩa.
+
+3. Viết code hiển thị nhiệt độ (vd: 38.76 oC) của CPU trên module max7219.
+
+4. Viết thư viện cho max7219. Thư viện gồm 2 file: max7219.c và max7219.h. Trong thư viện có các hàm cơ bản sau:
+- hàm gửi data
+- hàm Init
+- hàm hiển thị số 
+- hàm dịch nội dung trên module led 7 đoạn sang trái, phải.

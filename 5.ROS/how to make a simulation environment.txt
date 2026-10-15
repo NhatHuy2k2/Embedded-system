@@ -1,0 +1,20 @@
+1. Create gazebo map by using Building editor -> save as "map1.world"
+https://www.youtube.com/watch?v=Y2LRHl79b3g
+2. Create a new pakages in ros:
+    cd catkin_ws/src
+    catkin_create_pkg my_robot_gazebo urdf rviz
+3. Create folders inside "my_robot_gazebo": worlds, launch, models
+4. create files:
+       /launch/robot_gazebo.launch
+   move "map1.world" to folder "worlds"
+5. Edit robot_gazebo.launch
+    http://classic.gazebosim.org/tutorials?tut=ros_roslaunch&cat=connect_ros
+6. cd ~/catkin_ws -> catkin_make
+   source devel/setup.bash
+8. roslaunch my_robot_gazebo robot_gazebo.launch
+9. Edit urdf file to add sensors
+https://classic.gazebosim.org/tutorials?tut=ros_urdf
+https://classic.gazebosim.org/tutorials?tut=ros_gzplugins
+
+Link hướng dẫn cho ROS2:
+https://articulatedrobotics.xyz/mobile-robot-3-concept-gazebo/

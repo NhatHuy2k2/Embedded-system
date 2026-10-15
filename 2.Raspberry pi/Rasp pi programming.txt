@@ -1,0 +1,30 @@
+Thư viện cần cài đặt trên raspberry:
+BCM2835 libraries:
+wget http://www.airspayce.com/mikem/bcm2835/bcm2835-1.70.tar.gz
+tar zxvf bcm2835-1.70.tar.gz
+cd bcm2835-1.70/
+sudo ./configure
+sudo make && sudo make check && sudo make install
+
+wiringPi libraries :
+Raspberry 3/4/zero version 1:
+wget https://project-downloads.drogon.net/wiringpi-latest.deb
+sudo dpkg -i wiringpi-latest.deb
+gpio -v
+Raspberry zero version 2:
+wget https://github.com/WiringPi/WiringPi/releases/download/2.61-1/wiringpi-2.61-1-armhf.deb
+sudo dpkg -i wiringpi-2.61-1-armhf.deb
+gpio -v
+
+
+
+
+Link bài giảng online (tiếp)
+8. Kết nối raspberry với các bo công suất
+https://drive.google.com/file/d/1j1h_kRd2TJ60wMeZiZthYPTWBEs5WxOC/view?usp=sharing
+
+9. Lập trình IO cho raspberry (tiếp) - Interrupt
+https://drive.google.com/file/d/1beweViu6zYmg9guN-El5H6giKJ6ucWWN/view?usp=sharing
+
+10. Tạo xung PWM
+https://drive.google.com/file/d/1ZXR27hZwQDwn_43toUaWit3NMIGDkjUX/view?usp=sharing
